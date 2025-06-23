@@ -1,9 +1,9 @@
 <script setup>
-  import Dashboard from './views/Dashboard.vue';
+  import TaskBoard from './views/TaskBoard.vue';
 </script>
 
 <template>
-  <Dashboard />
+  <TaskBoard />
 </template>
 
 <style scoped>

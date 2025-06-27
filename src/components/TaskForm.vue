@@ -3,7 +3,7 @@
         <h4>Название:</h4>
         <input type="text" v-model="taskStore.task.title">
         <h4>Содержание:</h4>
-        <textarea v-model="taskStore.task.description"></textarea>
+        <textarea v-model.trim="taskStore.task.description"></textarea>
         <h4>Тема:</h4>
         <select v-model="taskStore.task.category">
             <option disabled value="">Выберите приоритет</option>

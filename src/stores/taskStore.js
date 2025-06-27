@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { useLocalStorageStore } from "./localStorageStore";
 
 export const useTaskStore = defineStore('TaskStore', () => {
+    const localStorageStore = useLocalStorageStore()
     const task = ref({
         id: Date.now(),
         title: '',
@@ -11,12 +13,15 @@ export const useTaskStore = defineStore('TaskStore', () => {
     })
     const days = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье']
 
-    const tasksList = ref([])
+    const tasksList = ref(localStorageStore.loadTasks())
 
     const addTask = (day) => {
         task.value.day = day
-        task.value.title.length > 0 ? tasksList.value.push({...task.value}) : null             
-        cleanTask()
+        task.value.title.trim().length > 0 
+        ? (tasksList.value.push({...task.value, id: Date.now()}),
+        localStorageStore.saveTasks(tasksList.value),
+        cleanTask())
+        : null
     }
     const cleanTask = () => {
         task.value.id = Date.now(),

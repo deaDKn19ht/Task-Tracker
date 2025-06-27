@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export const useTaskStore = defineStore('TaskStore', () => {
     const task = ref({
@@ -9,12 +9,13 @@ export const useTaskStore = defineStore('TaskStore', () => {
         category: '',
         day: '',
     })
+    const days = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье']
 
     const tasksList = ref([])
 
-    const addTask = () => {
-        tasksList.value.push({...task.value})        
-        console.log(tasksList.value);
+    const addTask = (day) => {
+        task.value.day = day
+        task.value.title.length > 0 ? tasksList.value.push({...task.value}) : null             
         cleanTask()
     }
     const cleanTask = () => {
@@ -24,9 +25,15 @@ export const useTaskStore = defineStore('TaskStore', () => {
         task.value.category = '',
         task.value.day = ''
     }
+    const tasksForDay = (day) => computed(() => {
+        return tasksList.value.filter(task => task.day === day)
+    })
 
     return {
         task,
+        days,
+        tasksList,
+        tasksForDay,
         addTask,
     }
 })

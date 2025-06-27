@@ -13,7 +13,7 @@
             <option value="health">Здоровье</option>
             <option value="housework">Домашние дела</option>            
         </select>
-        <Button :btn_name="'Добавить'" @click="taskStore.addTask" />
+        <Button :btn_name="'Добавить'" @click="taskStore.addTask(props.day)" />
     </div>
 </template>
 
@@ -22,6 +22,10 @@
     import { useTaskStore } from '../stores/taskStore'
 
     const taskStore = useTaskStore()
+
+    const props = defineProps({
+        day: String,
+    });
 </script>
 
 <style lang="scss" scoped>

@@ -30,9 +30,16 @@ export const useTaskStore = defineStore('TaskStore', () => {
         task.value.category = '',
         task.value.day = ''
     }
-    const tasksForDay = (day) => computed(() => {
+    const tasksForDay = (day) =>  {
         return tasksList.value.filter(task => task.day === day)
-    })
+    }
+    const updateTaskDay = (taskId, newDay) => {
+    const taskIndex = tasksList.value.findIndex(task => task.id === taskId)
+    if (taskIndex !== -1) {
+        tasksList.value[taskIndex].day = newDay
+        localStorageStore.saveTasks(tasksList.value) // Сохраняем изменения в localStorage
+    }
+}
 
     return {
         task,
@@ -40,5 +47,6 @@ export const useTaskStore = defineStore('TaskStore', () => {
         tasksList,
         tasksForDay,
         addTask,
+        updateTaskDay,
     }
 })

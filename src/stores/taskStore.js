@@ -38,8 +38,19 @@ export const useTaskStore = defineStore('TaskStore', () => {
     if (taskIndex !== -1) {
         tasksList.value[taskIndex].day = newDay
         localStorageStore.saveTasks(tasksList.value) // Сохраняем изменения в localStorage
-    }
+    }    
 }
+    const deleteTask = (taskId) => {
+        tasksList.value = tasksList.value.filter(task => task.id !== taskId)
+        localStorageStore.saveTasks(tasksList.value)
+    }
+    const  editTask = (updatedTask) => {
+        const index = tasksList.value.findIndex(t => t.id === updatedTask.id)
+        if (index !== -1) {
+            tasksList.value[index] = {...updatedTask}
+            localStorageStore.saveTasks(tasksList.value)
+        }
+    }
 
     return {
         task,
@@ -48,5 +59,7 @@ export const useTaskStore = defineStore('TaskStore', () => {
         tasksForDay,
         addTask,
         updateTaskDay,
+        deleteTask,
+        editTask,
     }
 })

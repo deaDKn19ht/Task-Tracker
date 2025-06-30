@@ -4,7 +4,7 @@
         <div>
             <Draggable v-model="localTasks" item-key="id" group="tasks" @change="onChange" @end="onDragEnd" >
                 <template #item="{ element }">
-                    <TaskCard :task="element" /> 
+                    <TaskCard :task="element" @delete="handleDelete" @edit="handleEdit" /> 
                 </template>                 
             </Draggable>            
             <Button :btn_name="'Добавить задачу'" @click="showForm = !showForm" />
@@ -43,7 +43,7 @@
 }, { deep: true })
 
    const onChange = (evt) => {
-  const { added, removed } = evt
+  const { added } = evt
 
   if (added) {
     // Обновляем поле day у добавленной задачи
@@ -63,6 +63,12 @@ const onDragEnd = () => {
 
   // Сохраняем в localStorage
   localStorageStore.saveTasks(taskStore.tasksList)
+}
+const handleDelete = (taskId) => {
+    taskStore.deleteTask(taskId)
+}
+const handleEdit = (task) => {
+    taskStore.editTask(task)
 }
 </script>
 

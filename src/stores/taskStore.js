@@ -12,6 +12,24 @@ export const useTaskStore = defineStore('TaskStore', () => {
         day: '',
     })
     const days = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье']
+    const categories = [
+        {value: 'work', lable: 'Работа'},
+        {value: 'studies', lable: 'Учеба'},
+        {value: 'personal', lable: 'Личное'},
+        {value: 'health', lable: 'Здоровье'},
+        {value: 'housework', lable: 'Домашние дела'},
+    ]
+    const selectedCategory = ref('')
+
+    const filteredTasks = computed(() => {
+        if(!selectedCategory.value) {
+            return tasksList.value
+        }
+        return tasksList.value.filter(task => task.category === selectedCategory.value)
+    })
+    const setCategoryFilter = (category) => {
+        selectedCategory.value = category
+    }
 
     const tasksList = ref(localStorageStore.loadTasks())
 
@@ -52,14 +70,18 @@ export const useTaskStore = defineStore('TaskStore', () => {
         }
     }
 
+
     return {
         task,
         days,
         tasksList,
+        categories,
+        filteredTasks,
         tasksForDay,
         addTask,
         updateTaskDay,
         deleteTask,
-        editTask,
+        editTask,        
+        setCategoryFilter,
     }
 })

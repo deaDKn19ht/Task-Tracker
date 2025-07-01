@@ -30,7 +30,9 @@
     });
     const localTasks = ref([])
 
-    const loadTasksForDay = () => {localTasks.value = taskStore.tasksList.filter(task => task.day === props.day)} 
+    const loadTasksForDay = () => {
+  localTasks.value = taskStore.filteredTasks.filter(task => task.day === props.day);
+};
     
     onMounted(() => {
         loadTasksForDay();
@@ -38,9 +40,13 @@
 
     const showForm = ref(false);
 
-    watch(() => taskStore.tasksList, () => {
-  loadTasksForDay()
-}, { deep: true })
+    watch(
+  () => taskStore.filteredTasks,
+  () => {
+    loadTasksForDay();
+  },
+  { deep: true }
+);
 
    const onChange = (evt) => {
   const { added } = evt

@@ -1,0 +1,95 @@
+/* сброс стилей */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* Убираем списки */
+ol, ul {
+  list-style: none;
+}
+
+/* Убираем стандартные стили ссылок */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Устанавливаем базовую высоту и линии */
+body {
+  line-height: 1;
+  background-color: #fff;
+  color: #000;
+}
+
+/* Таблицы */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Формы */
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: 100%;
+  margin: 0;
+  vertical-align: middle;
+  background: none;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Убираем выделение текста при перетаскивании */
+* {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE10+/Edge */
+  user-select: none;         /* Standard */
+}
+
+/* Сброс для изображений */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Убираем тени и обводки по умолчанию */
+fieldset {
+  border: none;
+}
+
+/* Сбрасываем стили заголовков для единообразия */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+}
+
+/* Сбрасываем кнопки */
+button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Глобальный box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}

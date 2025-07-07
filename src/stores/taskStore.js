@@ -10,6 +10,7 @@ export const useTaskStore = defineStore("TaskStore", () => {
     description: "",
     category: "",
     day: "",
+    done: false,
   });
   const days = [
     "Понедельник",
@@ -28,7 +29,8 @@ export const useTaskStore = defineStore("TaskStore", () => {
     { value: "housework", label: "Домашние дела" },
   ];
   const selectedCategory = ref("");
-  const activeFormDay = ref(null)
+  const activeFormDay = ref(null);
+  const activeEditId = ref(null);
 
   const filteredTasks = computed(() => {
     if (!selectedCategory.value) {
@@ -46,11 +48,12 @@ export const useTaskStore = defineStore("TaskStore", () => {
 
   const addTask = (day) => {
     task.value.day = day;
-    task.value.title.trim().length > 0
+    return task.value.title.trim().length > 0
       ? (tasksList.value.push({ ...task.value, id: Date.now() }),
         localStorageStore.saveTasks(tasksList.value),
-        cleanTask())
-      : null;
+        cleanTask(),
+        true)
+      : false;
   };
   const cleanTask = () => {
     (task.value.id = Date.now()),
@@ -66,7 +69,7 @@ export const useTaskStore = defineStore("TaskStore", () => {
     const taskIndex = tasksList.value.findIndex((task) => task.id === taskId);
     if (taskIndex !== -1) {
       tasksList.value[taskIndex].day = newDay;
-      localStorageStore.saveTasks(tasksList.value); // Сохраняем изменения в localStorage
+      localStorageStore.saveTasks(tasksList.value);
     }
   };
   const deleteTask = (taskId) => {
@@ -88,6 +91,7 @@ export const useTaskStore = defineStore("TaskStore", () => {
     categories,
     filteredTasks,
     activeFormDay,
+    activeEditId,
     tasksForDay,
     addTask,
     updateTaskDay,

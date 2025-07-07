@@ -1,10 +1,11 @@
 <template>
-    <div :class="['task-card', `task-card--${props.task.category}`]">
+    <div :class="['task-card', `task-card--${props.task.done ? 'done' : props.task.category}`]">
         <div v-if="!isEditing">
             <h4>{{ props.task.title }}</h4>
             <p>{{ props.task.description }}</p>
             <Button @click="toggleMenu" :btn_name="btn_icon_menu" />
             <div v-if="showMenu" class="menu">
+                <Button @click="markDone" :btn_name="btn_icon_done" />
                 <Button @click="startEditing" :btn_name="btn_icon_edit" />
                 <Button @click="emitDelete" :btn_name="btn_icon_del" />
             </div>
@@ -28,8 +29,11 @@
 </template>
 
 <script setup>
+import { useTaskStore } from '../stores/taskStore';
 import Button from './Button.vue'
 import { ref, watch, nextTick } from 'vue'
+
+const taskStore = useTaskStore()
 const props = defineProps({
     task: Object,
 });
@@ -47,8 +51,12 @@ watch(() => props.task,
         editableCategory.value = newTask.category
     })
 const startEditing = () => {
+    if (taskStore.activeEditId && taskStore.activeEditId !== props.task.id) {
+        return
+    }
     isEditing.value = true
     showMenu.value = false
+    taskStore.activeEditId = props.task.id
     nextTick(() => {
         autoResize()
     })
@@ -65,9 +73,11 @@ const saveEdit = () => {
         category: editableCategory.value
     })
     isEditing.value = false
+    taskStore.activeEditId = null
 }
 const cancelEdit = () => {
     isEditing.value = false
+    taskStore.activeEditId = null
     editableTitle.value = props.task.title
     editableDescription.value = props.task.description
     editableCategory.value = props.task.category
@@ -80,12 +90,20 @@ const autoResize = () => {
     descriptionTextarea.value.style.height = 'auto'
     descriptionTextarea.value.style.height = descriptionTextarea.value.scrollHeight + 'px'
 }
+const markDone = () => {
+    emit('edit', {
+        ...props.task,
+        done: !props.task.done
+    })
+    showMenu.value = false
+}
 
 const btn_icon_menu = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19.75 12a.75.75 0 0 0-.75-.75H5a.75.75 0 0 0 0 1.5h14a.75.75 0 0 0 .75-.75m0-5a.75.75 0 0 0-.75-.75H5a.75.75 0 0 0 0 1.5h14a.75.75 0 0 0 .75-.75m0 10a.75.75 0 0 0-.75-.75H5a.75.75 0 0 0 0 1.5h14a.75.75 0 0 0 .75-.75" clip-rule="evenodd"/></svg>`
 const btn_icon_edit = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M15.137 3.47a.75.75 0 0 0-1.06 0l-9.193 9.192a.75.75 0 0 0-.195.34l-1 3.83a.75.75 0 0 0 .915.915l3.828-1a.75.75 0 0 0 .341-.196l9.192-9.192a.75.75 0 0 0 0-1.06zM6.088 13.579l8.519-8.518l1.767 1.767l-8.518 8.519l-2.393.625z" clip-rule="evenodd"/><path fill="currentColor" d="M4 19.25a.75.75 0 0 0 0 1.5h15a.75.75 0 0 0 0-1.5z"/></svg>`
 const btn_icon_del = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12l1.41 1.41L13.41 14l2.12 2.12l-1.41 1.41L12 15.41l-2.12 2.12l-1.41-1.41L10.59 14zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/></svg>`
 const btn_icon_save = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 20 20"><path fill="currentColor" d="m15.3 5.3l-6.8 6.8l-2.8-2.8l-1.4 1.4l4.2 4.2l8.2-8.2z"/></svg>`
 const btn_icon_cancel = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 44 44"><path fill="currentColor" fill-rule="evenodd" d="m21.002 26.588l10.357 10.604c1.039 1.072 1.715 1.083 2.773 0l2.078-2.128c1.018-1.042 1.087-1.726 0-2.839L25.245 21L36.211 9.775c1.027-1.055 1.047-1.767 0-2.84l-2.078-2.127c-1.078-1.104-1.744-1.053-2.773 0L21.002 15.412L10.645 4.809c-1.029-1.053-1.695-1.104-2.773 0L5.794 6.936c-1.048 1.073-1.029 1.785 0 2.84L16.759 21L5.794 32.225c-1.087 1.113-1.029 1.797 0 2.839l2.077 2.128c1.049 1.083 1.725 1.072 2.773 0z"/></svg>`
+const btn_icon_done = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17l-3.88-3.88-1.41 1.41L9 19 20.59 7.41 19.17 6z"/></svg>`
 
 </script>
 
@@ -95,7 +113,8 @@ $category-colors: (
     studies: #d69e2e,
     personal: #38a169,
     health: #e53e3e,
-    housework: #805ad5
+    housework: #805ad5,
+    done: #a0aec0
 );
 
 .task-card {
@@ -109,11 +128,11 @@ $category-colors: (
     width: 100%;
     box-sizing: border-box;
     min-width: 200px;
-    
+
     @each $category, $color in $category-colors {
         &--#{$category} {
             border-left: 6px solid $color;
-            box-shadow: 0 0 6px rgba(red($color), green($color), blue($color), 0.5);
+            box-shadow: 0 0 6px rgba($color, 0.5);
         }
     }
 }

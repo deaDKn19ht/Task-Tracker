@@ -1,10 +1,12 @@
 <template>
   <Draggable v-model="localTasks" item-key="id" group="tasks" @change="onChange" @end="onDragEnd" class="day-column"
-    :class="{ 'is-empty': localTasks.length === 0 }">
+    :class="{ 'is-empty': localTasks.length === 0 }" :move="canMove">
     <template #header>
       <div class="day-header">
         <h3>{{ props.day }}</h3>
-        <Button :btn_name="showForm ? btn_icon_cross : btn_icon_plus" @click="toggleForm" />
+        <Button :btn_name="showForm ? btn_icon_cross : btn_icon_plus"
+          :title="showForm ? 'Закрыть форму' : 'Открыть форму'"
+          :aria-label="showForm ? 'Закрыть форму' : 'Открыть форму'" @click="toggleForm" />
         <TaskForm :day="props.day" v-if="showForm" @submitted="toggleForm" />
       </div>
     </template>
@@ -73,6 +75,9 @@ const onDragEnd = () => {
 
   // Сохраняем в localStorage
   localStorageStore.saveTasks(taskStore.tasksList)
+}
+const canMove = () => {
+  return taskStore.activeEditId === null
 }
 const handleDelete = (taskId) => {
   taskStore.deleteTask(taskId)

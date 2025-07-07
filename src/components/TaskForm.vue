@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>Название:</h4>
-        <input type="text" v-model="taskStore.task.title">
+        <input type="text" v-model="taskStore.task.title" placeholder="от 1 до 36 символов" maxlength="36">
         <h4>Содержание:</h4>
         <textarea v-model.trim="taskStore.task.description" ref="descriptionTextarea" @input="autoResize"></textarea>
         <h4>Тема:</h4>
@@ -13,7 +13,8 @@
             <option value="health">Здоровье</option>
             <option value="housework">Домашние дела</option>
         </select>
-        <Button :btn_name="btn_icon_plus" @click="addTaskAndEmit" :disabled="!taskStore.task.title.trim()" />
+        <Button :btn_name="btn_icon_plus" @click="addTaskAndEmit" :disabled="!taskStore.task.title.trim()"
+            :title="'Добавить'" :area-lable="'Добавить'" />
     </div>
 </template>
 
@@ -68,6 +69,7 @@ div {
 h4 {
     margin-bottom: 0.5rem;
     color: #2d3748;
+    font-weight: 600;
 }
 
 input,

@@ -3,15 +3,16 @@
         <div v-if="!isEditing">
             <h4>{{ props.task.title }}</h4>
             <p>{{ props.task.description }}</p>
-            <Button @click="toggleMenu" :btn_name="btn_icon_menu" />
+            <Button @click="toggleMenu" :btn_name="btn_icon_menu" :title="'Меню'" :area-lable="'Меню'" />
             <div v-if="showMenu" class="menu">
-                <Button @click="markDone" :btn_name="btn_icon_done" />
-                <Button @click="startEditing" :btn_name="btn_icon_edit" />
-                <Button @click="emitDelete" :btn_name="btn_icon_del" />
+                <Button @click="markDone" :btn_name="btn_icon_done" :title="'Выполнено'" :area-lable="'Выполнено'" />
+                <Button @click="startEditing" :btn_name="btn_icon_edit" :title="'Редактировать'"
+                    :area-lable="'Редактировать'" />
+                <Button @click="emitDelete" :btn_name="btn_icon_del" :title="'Удалить'" :area-lable="'Удалить'" />
             </div>
         </div>
         <div v-else>
-            <input v-model="editableTitle" placeholder="Название задачи" />
+            <input v-model="editableTitle" placeholder="Название (до 36 символов)" maxlength="36" />
             <textarea v-model="editableDescription" placeholder="Описание задачи" ref="descriptionTextarea"
                 @input="autoResize" wrap="hard"></textarea>
             <select v-model="editableCategory">
@@ -22,8 +23,8 @@
                 <option value="health">Здоровье</option>
                 <option value="housework">Домашние дела</option>
             </select>
-            <Button @click="saveEdit" :btn_name="btn_icon_save" />
-            <Button @click="cancelEdit" :btn_name="btn_icon_cancel" />
+            <Button @click="saveEdit" :btn_name="btn_icon_save" :title="'Сохранить'" :area-lable="'Сохранить'" />
+            <Button @click="cancelEdit" :btn_name="btn_icon_cancel" :title="'Отмена'" :area-lable="'Отмена'" />
         </div>
     </div>
 </template>
@@ -140,6 +141,7 @@ $category-colors: (
 h4 {
     margin-bottom: 0.5rem;
     color: #2d3748;
+    font-weight: 600;
 }
 
 p {
